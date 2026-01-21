@@ -105,4 +105,72 @@ currency-exchange-server/
 ├── LICENSE
 └── README.md
 ```
+***DOCKER***
 
+**Build**
+```bash
+docker build -t currency-exchange-server .
+```
+
+Run (ephemeral):
+```bash
+docker run --rm -p 8080:8080 currency-exchange-server
+```
+Run with persistent database:
+
+The server writes exchange_db.txt to the container working directory. The Docker image sets the working directory to /data,
+so mount a volume there to persist the database:
+```bash
+docker run --rm -p 8080:8080 \
+  -v "$(pwd)/data:/data" \
+  currency-exchange-server
+```
+This will create/use:
+
+- ./data/exchange_db.txt on the host (persisted across runs)
+
+**Connect from the client**
+
+If you’re running the client on the host machine:
+-
+./client 127.0.0.1
+
+
+If the client is also containerized later, you can run both on the same Docker network (example in Compose below).
+
+ Security & runtime notes (Docker)
+
+- Multi-stage build: compiles in gcc:13, runs on debian:bookworm-slim for a smaller attack surface.
+
+- Basic hardening flags enabled (-fstack-protector-strong, -D_FORTIFY_SOURCE=2, PIE, RELRO/NOW).
+
+- Runs as a non-root user (appuser).
+
+- Uses /data as a writable directory (avoids writing into the image filesystem).
+
+- Healthcheck uses nc to verify port 8080 is accepting connections.
+  
+**Optional: Docker Compose**
+-
+Create compose.yml:
+```yaml
+services:
+  server:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/data
+```
+**Recommended .dockerignore**
+
+This keeps builds fast and clean:
+```dockerignore
+.git
+.gitignore
+README.md
+data
+*.o
+client
+server
+```
