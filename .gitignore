@@ -1,0 +1,13 @@
+# binaries
+server
+client
+
+# database
+exchange_db.txt
+
+# editor backups
+*~
+*.swp
+
+# OS files
+.DS_Store
