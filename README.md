@@ -1,6 +1,6 @@
 # Currency Exchange Server & Client
 
-A C-based TCP client-server application that simulates a multi-user currency exchange system with persistent accounts, balances, and currency conversion.  
+A C-based TCP client-server application that simulates a multi user currency exchange system with persistent accounts, balances, and currency conversion.  
 Developed, refined and published as a personal **repository**.
 
 ---
